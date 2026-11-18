@@ -29,3 +29,9 @@ variable "policy_json" {
   type = string
   description = "The JSON policy document defining what this role can do"
 }
+
+variable "permissions_boundary_arn" {
+  description = "Optional ARN of the IAM policy used as a permissions boundary for the role."
+  type        = string
+  default     = null
+}
