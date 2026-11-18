@@ -32,6 +32,7 @@ A highly flexible, modular component designed to manage IAM roles, trust policie
 * **Dynamic Trust Policies:** Automatically configures `AssumeRole` policies based on principal type (Service, AWS Account, etc.).
 * **Confused Deputy Protection (`external_id`):** Utilizes `dynamic "condition"` blocks to conditionally inject `sts:ExternalID` checks only when explicitly required, keeping plan outputs clean for standard internal roles.
 * **Custom Inline Policies:** Accepts dynamic JSON policies to handle department-specific permissions without hardcoding.
+* **Permission Boundaries (`permissions_boundary_arn`):** Supports optional maximum permission enforcement on roles, preventing privilege escalation and bounding administrative authority during delegated workflows.
 
 ### 2. `rds_database`
 
@@ -56,7 +57,11 @@ A lightweight workload module used primarily to simulate application databases a
 
 ### 3. Shared Infrastructure (`shared/core`)
 
-* Houses foundational cross-account services, including CI/CD build runner roles (`shared-cicd-runner-role`) and centralized CloudTrail logging integrations (`shared-central-logging-role`).
+Houses foundational cross-account services and high-security guardrails, featuring:
+
+* **CI/CD Build Runner (`shared-cicd-runner-role`):** Secured with strict `NotAction` directives to isolate the pipeline entirely to S3 and ECR operations, alongside mandatory `aws:SecureTransport` (HTTPS-only) and `aws:RequestedRegion` (`eu-central-1`) enforcement.
+
+* **Centralized Logging (`shared-central-logging-role`):** Dedicated to CloudTrail log ingestion, hardened with `aws:SourceArn` condition checks against Confused Deputy vulnerabilities and explicit Deny rules blocking any log group/stream deletion or tampering.
 
 ## Getting Started & Usage
 
