@@ -43,8 +43,8 @@ A lightweight workload module used primarily to simulate application databases a
 ### 1. Engineering Department
 
 * **`engineering/dev`:**
-* Manages core developer debugging rights, ECS execution roles, and an advanced **ABAC (Attribute-Based Access Control) Manager role**.
-* **ABAC Demonstration:** Includes a deployed RDS instance (`eng-dev-database`) tagged with `Department = Engineering` and `Environment = development`. The `rds_abac_manager` role uses IAM `Condition` blocks (`aws:ResourceTag/Department` and `aws:ResourceTag/Environment`) to ensure administrative actions are strictly scoped to matching resources.
+  * Manages developer debugging permissions (`Allow` scoped to HTTPS and `eu-central-1`, paired with an MFA `Deny` condition and explicit `Deny` guards on destructive log and IAM actions), ECS execution roles, and an **ABAC (Attribute-Based Access Control) Manager role** using a unified `statements` schema in `locals.tf` with centralized `common_tags` propagation.
+  * **ABAC Demonstration:** Includes a PostgreSQL RDS instance (`eng-dev-database`) tagged with `Department = Engineering` and `Environment = development`. The `rds_abac_manager` role uses IAM `Condition` blocks (`aws:ResourceTag/Department` and `aws:ResourceTag/Environment`) to scope administrative access to matching resources.
 
 
 * **`engineering/prod`:** Hardened production roles with restricted permissions and strict least-privilege guardrails.
