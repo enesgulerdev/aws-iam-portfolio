@@ -53,7 +53,8 @@ A lightweight workload module used primarily to simulate application databases a
 
 ### 2. HR Department
 
-* **`hr/dev` & `hr/prod`:** Department-specific access models, handling developer debugging tools, secure cloud logging, and automated workflow service roles (`lambda_automation`) tailored to HR compliance requirements.
+* **`hr/dev`:** Development HR identity (`developer`) and `lambda_automation` workload roles structured around the unified `statements` schema in `locals.tf`, combining `eu-central-1` and `aws:SecureTransport` (`true`) conditions with `Allow` + `NotAction` experimentation and explicit `Deny` guardrails.
+* **`hr/prod`:** Production HR access model and workload roles planned for stricter compliance guardrails, environment isolation, and tighter policy conditions.
 
 ### 3. Shared Infrastructure (`shared/core`)
 
