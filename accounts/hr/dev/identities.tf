@@ -1,25 +1,18 @@
-module "hr_dev_developer_role" {
-  source = "../../../modules/iam_role"
+module "hr_dev_identities" {
+  for_each = local.identity_roles
+  source   = "../../../modules/iam_role"
 
-  role_name = "hr-team-developer-role"
-  principal_type = "AWS"
-  principal_identifier = "arn:aws:iam::111111111111:root"
+  role_name                = each.value.role_name
+  principal_type           = each.value.principal_type
+  principal_identifier     = each.value.principal_identifier
+  permissions_boundary_arn = lookup(each.value, "permissions_boundary_arn", null)
+  external_id              = lookup(each.value, "external_id", null)
 
-  policy_name = "hr-dev-developer-policy"
+  policy_name = each.value.policy_name
   policy_json = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-        {
-            Sid = "AllowHRDevDebugging"
-            Effect = "Allow"
-            Action = [
-                "lambda:GetFunction",
-                "lambda:ListFunctions",
-                "logs:DescribeLogGroups",
-                "logs:GetLogEvents"
-            ]
-            Resource = "*"
-        }
-    ]
+    Version   = "2012-10-17"
+    Statement = each.value.statements
   })
+
+  tags = local.common_tags
 }
