@@ -54,7 +54,7 @@ A lightweight workload module used primarily to simulate application databases a
 ### 2. HR Department
 
 * **`hr/dev`:** Development HR identity (`developer`) and `lambda_automation` workload roles structured around the unified `statements` schema in `locals.tf`, combining `eu-central-1` and `aws:SecureTransport` (`true`) conditions with `Allow` + `NotAction` experimentation and explicit `Deny` guardrails.
-* **`hr/prod`:** Production HR access model and workload roles planned for stricter compliance guardrails, environment isolation, and tighter policy conditions.
+* **`hr/prod`:** Production HR auditor (`auditor`) and `core_service` workload roles structured around the unified `statements` schema in `locals.tf`, enforcing `eu-central-1`, `aws:SecureTransport` (`true`), `aws:PrincipalTag/Department` (`HR`), `NotAction` experimentation, explicit `Deny` guardrails, and `Compliance = "High"` tagging.
 
 ### 3. Shared Infrastructure (`shared/core`)
 
