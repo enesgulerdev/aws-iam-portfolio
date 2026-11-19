@@ -1,24 +1,18 @@
-module "engineering_developer_role" {
-  source = "../../../modules/iam_role"
+module "engineering_identities" {
+  source   = "../../../modules/iam_role"
+  for_each = local.identity_roles
 
-  role_name            = "eng-team-developer-role"
-  
-  principal_type       = "AWS"
-  principal_identifier = "arn:aws:iam::123456789012:root"
+  role_name                = each.value.role_name
+  principal_type           = each.value.principal_type
+  principal_identifier     = each.value.principal_identifier
+  permissions_boundary_arn = lookup(each.value, "permissions_boundary_arn", null)
+  external_id              = lookup(each.value, "external_id", null)
 
-  policy_name = "eng-team-developer-debug-policy"
+  policy_name = each.value.policy_name
   policy_json = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Sid      = "AllowDebuggingAndLogs"
-        Effect   = "Allow"
-        Action   = [
-          "cloudwatch:Describe*",
-          "logs:GetLogEvents"
-        ]
-        Resource = "*"
-      }
-    ]
+    Version   = "2012-10-17"
+    Statement = each.value.statements
   })
+
+  tags = local.common_tags
 }
