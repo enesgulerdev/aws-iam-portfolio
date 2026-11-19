@@ -1,21 +1,18 @@
 module "hr_prod_roles" {
-  for_each = local.hr_prod_roles
+  for_each = local.workload_roles
   source   = "../../../modules/iam_role"
 
-  role_name            = each.value.role_name
-  principal_identifier = each.value.principal_identifier
-  policy_name          = each.value.policy_name
-  external_id = each.value.external_id
+  role_name                = each.value.role_name
+  principal_type           = each.value.principal_type
+  principal_identifier     = each.value.principal_identifier
+  permissions_boundary_arn = lookup(each.value, "permissions_boundary_arn", null)
+  external_id              = lookup(each.value, "external_id", null)
 
+  policy_name = each.value.policy_name
   policy_json = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Sid      = "HRProdSecureLogsDynamic"
-        Effect   = "Allow"
-        Action   = each.value.actions
-        Resource = "*"
-      }
-    ]
+    Version   = "2012-10-17"
+    Statement = each.value.statements
   })
+
+  tags = local.common_tags
 }
