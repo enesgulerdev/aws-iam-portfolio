@@ -47,7 +47,7 @@ A lightweight workload module used primarily to simulate application databases a
   * **ABAC Demonstration:** Includes a PostgreSQL RDS instance (`eng-dev-database`) tagged with `Department = Engineering` and `Environment = development`. The `rds_abac_manager` role uses IAM `Condition` blocks (`aws:ResourceTag/Department` and `aws:ResourceTag/Environment`) to scope administrative access to matching resources.
 
 
-* **`engineering/prod`:** Hardened production roles with restricted permissions and strict least-privilege guardrails.
+* **`engineering/prod`:** Hardened production identity (`ops_readonly`) and ECS task execution roles structured around the unified `statements` schema in `locals.tf`, with `eu-central-1` and `aws:SecureTransport` (`true`) IAM `Condition` guardrails and centralized `common_tags` (`Compliance = "High"`) propagation.
 
 > **Architectural Note on Workloads:** While enterprise best-practices typically separate identity management layers from service/workload layers into distinct state files, an isolated RDS instance is deliberately included within the `engineering/dev` layer as a *Proof of Concept (PoC)*. This directly validates and enforces Tag-Based Access Control (ABAC) assertions against dynamic resource attributes.
 
